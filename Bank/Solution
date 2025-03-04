@@ -1,19 +1,89 @@
-public class Bank {
-private int bankId;
-private String bankName;
-private int numberOfCustomers;
-private String city;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.*;
 
-public int getbankId() {return bankId;}
-public String getbankName(){return bankName;}
-public int getnumberOfCustomers() {return numberOfCustomers;}
-public String getcity() {return city;}
-
-Bank(int bankId,String bankName,int numberOfCustomers,String city){
-	this.bankId=bankId;
-	this.bankName=bankName;
-	this.numberOfCustomers=numberOfCustomers;
-	this.city=city;
+class Bank {
+    private int bankId;
+    private String bankName;
+    private int numberOfCustomers;
+    private String city;
+    
+    public int getbankId() {return bankId;}
+    public String getbankName(){return bankName;}
+    public int getnumberOfCustomers() {return numberOfCustomers;}
+    public String getcity() {return city;}
+    
+    Bank(int bankId,String bankName,int numberOfCustomers,String city){
+        this.bankId=bankId;
+        this.bankName=bankName;
+        this.numberOfCustomers=numberOfCustomers;
+        this.city=city;
+    }
 }
 
+public class Bank_Solution{
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+        Bank[] banks=new Bank[4];
+        for(int i=0;i<banks.length;i++){
+            int a=sc.nextInt();
+            sc.nextLine();
+            String b=sc.nextLine();
+            int c=sc.nextInt();
+            sc.nextLine();
+            String d=sc.nextLine();
+
+            banks[i]=new Bank(a, b, c, d);
+        }
+        String inpcity=sc.nextLine();
+        sc.close();
+
+        double ans1=findAvgNumberOfCustomersByCity(banks,inpcity);
+        if(ans1>0){System.out.println((int) ans1);}
+        else{System.out.println("Bank not Found");}
+
+
+        Bank ans2=getSecondLowestNumberOfCustomersBank(banks);
+        if(ans2!=null){
+            System.out.println(ans2.getbankId());
+            System.out.println(ans2.getbankName());
+            System.out.println(ans2.getnumberOfCustomers());
+            System.out.println(ans2.getcity());
+        }
+        else{System.out.println("Bank not Found");}
+    }
+
+    // Method-1 
+    public static double findAvgNumberOfCustomersByCity(Bank[] arr,String str){
+        int totalnofcustomers=0, similar_citycustomers=0;
+        for(Bank element:arr){
+            if(element.getcity().equals(str)){
+                totalnofcustomers+=element.getnumberOfCustomers();
+                similar_citycustomers++;  // total no of customers paased the conditions
+            }
+        }
+        return similar_citycustomers>0? (double) totalnofcustomers/similar_citycustomers :0;
+    }
+
+    // method-2
+    public static Bank getSecondLowestNumberOfCustomersBank(Bank[] arr){
+        List<Integer> evencustomers=new ArrayList<>();
+
+        for(Bank e:arr){
+            if(e.getnumberOfCustomers()%2==0){
+                evencustomers.add(e.getnumberOfCustomers());
+            }
+        }
+        if(evencustomers.size()<2){ return null;}
+
+        Collections.sort(evencustomers);
+        int secondlowest=evencustomers.get(1);
+
+        for(Bank e:arr){
+                if(e.getnumberOfCustomers()==secondlowest){
+                    return e;
+                }
+        }
+            return null; 
+    }
 }
